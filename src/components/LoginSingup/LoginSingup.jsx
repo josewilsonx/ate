@@ -4,13 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginSingup() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [message, setMessage] = useState(""); 
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -27,11 +26,7 @@ export default function LoginSingup() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          name,
-        },
-      },
+      options: { data: { name } },
     });
 
     if (error) {
@@ -59,7 +54,7 @@ export default function LoginSingup() {
       setErrorMessage("");
       console.log(data);
 
-      localStorage.setItem("auth", true);
+      localStorage.setItem("auth", "true"); 
       navigate("/dashboard");
     }
   };
@@ -86,7 +81,7 @@ export default function LoginSingup() {
 
         <div className="space-y-5">
           {/* Nome */}
-          <div className="flex items-center bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center bg-white/5 border border-white/10 rounded-lg px-4 py-3">
             <img
               src="/account.png"
               alt="Usuário"
@@ -102,7 +97,7 @@ export default function LoginSingup() {
           </div>
 
           {/* Email */}
-          <div className="flex items-center bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center bg-white/5 border border-white/10 rounded-lg px-4 py-3">
             <img
               src="/gmail.png"
               alt="Email"
@@ -118,9 +113,9 @@ export default function LoginSingup() {
           </div>
 
           {/* Senha */}
-          <div className="flex items-center bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center bg-white/5 border border-white/10 rounded-lg px-4 py-3">
             <img
-              src="/password.png"
+              src="/cadeado.png"
               alt="Senha"
               className="w-5 h-5 mr-3 opacity-70 pointer-events-none"
             />
@@ -135,9 +130,7 @@ export default function LoginSingup() {
         </div>
 
         {/* Mensagens */}
-        {message && (
-          <p className="text-green-400 text-center mt-4">{message}</p>
-        )}
+        {message && <p className="text-green-400 text-center mt-4">{message}</p>}
         {errorMessage && (
           <p className="text-red-400 text-center mt-4">{errorMessage}</p>
         )}
