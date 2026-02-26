@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginSingup() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -7,6 +8,11 @@ export default function LoginSingup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [message, setMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState(""); 
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     function handleMouseMove(event) {
@@ -16,7 +22,7 @@ export default function LoginSingup() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  //  SIGN UP
+  // SIGN UP
   const handleSignUp = async () => {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -29,9 +35,11 @@ export default function LoginSingup() {
     });
 
     if (error) {
-      alert("Erro: " + error.message);
+      setErrorMessage("Erro: " + error.message);
+      setMessage("");
     } else {
-      alert("Conta criada com sucesso!");
+      setMessage("Conta criada com sucesso!");
+      setErrorMessage("");
       console.log(data);
     }
   };
@@ -44,16 +52,20 @@ export default function LoginSingup() {
     });
 
     if (error) {
-      alert("Erro: " + error.message);
+      setErrorMessage("Erro: " + error.message);
+      setMessage("");
     } else {
-      alert("Login realizado com sucesso!");
+      setMessage("Login realizado com sucesso!");
+      setErrorMessage("");
       console.log(data);
+
+      localStorage.setItem("auth", true);
+      navigate("/dashboard");
     }
   };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden bg-slate-950">
-      
       {/* Glow */}
       <div
         className="absolute inset-0 opacity-30"
@@ -68,13 +80,11 @@ export default function LoginSingup() {
 
       {/* Card */}
       <div className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
-
         <h1 className="text-3xl font-bold text-white text-center mb-8">
           <span className="text-green-500">TerraMetric</span> Login
         </h1>
 
         <div className="space-y-5">
-
           {/* Nome */}
           <div className="flex items-center bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-blue-500">
             <img
@@ -122,8 +132,15 @@ export default function LoginSingup() {
               className="w-full bg-transparent outline-none text-white placeholder-gray-400"
             />
           </div>
-
         </div>
+
+        {/* Mensagens */}
+        {message && (
+          <p className="text-green-400 text-center mt-4">{message}</p>
+        )}
+        {errorMessage && (
+          <p className="text-red-400 text-center mt-4">{errorMessage}</p>
+        )}
 
         <div className="flex gap-4 mt-8">
           <button
@@ -140,7 +157,6 @@ export default function LoginSingup() {
             Login
           </button>
         </div>
-
       </div>
     </section>
   );
